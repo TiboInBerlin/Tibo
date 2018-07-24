@@ -31,13 +31,14 @@ class Registration extends Component {
 
         axios.post("/registration", this.state)
             .then(resp => {
-                if (resp.data.error) {
+                /*if (resp.data.error) {
                 this.setState({
                     error: resp.data.error
                 })
             } else {
                 location.replace('/')
-            }
+            }*/
+            console.log(resp.data);
         })
     }
 
@@ -56,15 +57,27 @@ class Registration extends Component {
                 <form onSubmit={ this.handleSubmit }>
                     <input
                         onChange={this.handleChange}
-                        name="fullName"
-                        placeholder="name"
+                        name="firstname"
+                        placeholder="first name"
                         type="text"
                     />
                     <input
                         onChange={this.handleChange}
-                        name="dog"
-                        placeholder="dog"
+                        name="lastname"
+                        placeholder="last name"
                         type="text"
+                    />
+                    <input
+                        onChange={this.handleChange}
+                        name="email"
+                        placeholder="email"
+                        type="text"
+                    />
+                    <input
+                        onChange={this.handleChange}
+                        name="hashedpassword"
+                        placeholder="password"
+                        type="password"
                     />
                     <button type="submit">Submit</button>
                 </form>
