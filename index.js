@@ -64,6 +64,7 @@ app.post("/registration", (req, res) => {
     }
 });
 
+
 //this shit here should be always last: just do it!
 app.get("*", function(req, res) {
     res.sendFile(__dirname + "/index.html");
