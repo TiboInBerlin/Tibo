@@ -4,6 +4,8 @@ const compression = require("compression");
 const bodyParser = require("body-parser");
 const db = require("./db/db.js");
 const bcrypt = require("./db/bcrypt.js");
+const csurf = require("csurf");
+const cookieSession = require("cookie-session");
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -22,6 +24,20 @@ if (process.env.NODE_ENV != "production") {
 } else {
     app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
+
+app.use(
+    cookieSession({
+        secret: `I am alway hungry`,
+        maxAge: 1000 * 60 * 60 * 24 * 14
+    })
+);
+
+app.use(csurf());
+
+app.use(function(req, res, next) {
+    res.cookie("mytoken", req.csrfToken());
+    next();
+});
 
 app.post("/registration", (req, res) => {
     //we will use the body parser to get the values of the form of the body
@@ -63,7 +79,6 @@ app.post("/registration", (req, res) => {
             });
     }
 });
-
 
 //this shit here should be always last: just do it!
 app.get("*", function(req, res) {

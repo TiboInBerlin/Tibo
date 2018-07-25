@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 //we do not need to import react dom because qwe did it in sart.js
-import axios from "axios";
+import axios from "./axios";
 
 class Registration extends Component {
     constructor() {
