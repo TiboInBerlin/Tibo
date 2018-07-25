@@ -80,6 +80,52 @@ app.post("/registration", (req, res) => {
     }
 });
 
+app.post("/login", (req, res) => {
+    console.log("loginstart", req.body);
+    //var userInfo; //We create this variable in order to link it with the variable results in our getEmail function.
+    //we will use the body parser to get the values of the form of the body
+    if (req.body.email == "" || req.body.password == "") {
+        console.log("allfieldserror");
+        res.json({
+            error: true,
+            message: "all fields are required!"
+        });
+        return; // if the user has one empty field, we redirect user to register page
+    }
+
+    db.getEmail(req.body.email).then(results => {
+        //remember: the result is ALWAYS an array!
+        if (results.length == 0) {
+            res.json({
+                error: true,
+                message: "email does not exist"
+            });
+        } else {
+            //userInfo = results[0];
+            //const hashedPwd = userInfo.hashed_password; //result is an array and hashed password is the fifth element of this array
+            bcrypt
+                .checkPassword(req.body.password, results[0].hashed_password)
+                .then(checked => {
+                    if (checked) {
+                        console.log(checked);
+                        /*req.session.userId = userInfo.id;
+                            req.session.firstname = userInfo.first_name;
+                            req.session.lastname = userInfo.last_name;
+                            req.session.email = userInfo.email;
+                            req.session.hashedPassword = hashedPwd;
+                            req.session.loggedIn = true;*/
+                        res.json({ success: true });
+                    } else {
+                        res.json({
+                            error: true,
+                            message: "password does not exist!"
+                        });
+                    }
+                });
+        }
+    });
+});
+
 //this shit here should be always last: just do it!
 app.get("*", function(req, res) {
     res.sendFile(__dirname + "/index.html");

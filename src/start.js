@@ -5,6 +5,7 @@ import Welcome from './Welcome'
 //I gonna some if statement is: check location.pathname
 
 ReactDOM.render(
-    <Welcome />, 
+
+    <Welcome />,
     document.querySelector('main')
 )

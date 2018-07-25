@@ -21,3 +21,11 @@ VALUES($1, $2, $3, $4) RETURNING *
         return results.rows[0];
     });
 };
+
+exports.getEmail = function(email) {
+    const q = `SELECT * FROM users WHERE email=$1`;
+    const params = [email];
+    return db.query(q, params).then(results => {
+        return results.rows;
+    });
+};

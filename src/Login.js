@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 //we do not need to import react dom because qwe did it in sart.js
 import axios from "./axios";
-import { Link } from "react-router-dom";
 
-class Registration extends Component {
+class Login extends Component {
     constructor() {
         super();
 
@@ -30,44 +29,28 @@ class Registration extends Component {
 
         //console.log("Running handleSubmit", this.state);
 
-        axios.post("/registration", this.state).then(resp => {
-            /*if (resp.data.error) {
+        axios.post("/login", this.state).then(resp => {
+            if (resp.data.error) {
                 this.setState({
-                    error: resp.data.error
+                    error: resp.data.message
                 })
             } else {
                 location.replace('/')
-            }*/
+            }
             console.log(resp.data);
         });
     }
 
     render() {
-        //const isLoggedIn = this.state.isLoggedIn;
-
-        //if (isLoggedIn) {
-        //return null;
-        //} else {
         //never forget to return otherwise it will break down!
         return (
-            <div className="registration">
-                <h1>Register to fight against ignorance!</h1>
+            <div className="login">
+                <h1>Login to fight against ignorance!</h1>
 
                 {this.state.error ? <div>ERROR: {this.state.error}</div> : null}
 
                 <form onSubmit={this.handleSubmit}>
-                    <input
-                        onChange={this.handleChange}
-                        name="firstname"
-                        placeholder="first name"
-                        type="text"
-                    />
-                    <input
-                        onChange={this.handleChange}
-                        name="lastname"
-                        placeholder="last name"
-                        type="text"
-                    />
+
                     <input
                         onChange={this.handleChange}
                         name="email"
@@ -76,17 +59,15 @@ class Registration extends Component {
                     />
                     <input
                         onChange={this.handleChange}
-                        name="hashedpassword"
+                        name="password"
                         placeholder="password"
                         type="password"
                     />
-                    <Link to="/login">Click here to Log in!</Link>
-                    <button type="submit">Submit</button>
+                    <button type="submit">Login</button>
                 </form>
             </div>
         );
-        //}
     }
 }
 
-export default Registration; //never use curly brackets when you use export default!
+export default Login; //never use curly brackets when you use export default!
