@@ -1,3 +1,7 @@
+body {
+    background-color: #c0392b;
+}
+
 .big-momma-component {
     background-color: green;
     padding: 15px;
@@ -6,4 +10,16 @@
 .registration {
     background-color: yellow;
     padding: 15px;
+}
+
+
+.profilepic-container {
+  width: 100px;
+  height: 100px;
+}
+
+.profilepic {
+  margin-left: 10px;
+  height: 90px;
+  width: 90px;
 }

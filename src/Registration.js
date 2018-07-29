@@ -1,92 +1,89 @@
-import React, { Component } from "react";
-//we do not need to import react dom because qwe did it in sart.js
-import axios from "./axios";
-import { Link } from "react-router-dom";
+import React, {Component} from "react";
+import axios from './axios';
+import { Link } from 'react-router-dom';
+import App from './App';
 
-class Registration extends Component {
-    constructor() {
-        super();
-
-        this.state = {
-            error: null
-        };
+class Registration extends Component { //inherits properties of Component
+    constructor(props) {
+        super(props);
+        this.state = {isLoggedIn : null};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     handleChange(e) {
-        //console.log("ho!");
-        //SetState is asynchronous and we can therefore pass it a callback!
-        //Review ES& dynamic properties!!!!!
-        this.setState({
-            //syntax to dynamically set a key:
-            [e.target.name]: e.target.value
+        this.setState({ [e.target.name] : e.target.value }, ()=>{
+            console.log(this.state);
         });
     }
 
     handleSubmit(e) {
         e.preventDefault();
 
-        //console.log("Running handleSubmit", this.state);
+        axios.post('/registration', this.state).then((results)=>{
+            if (results.data.success) {
+                console.log(results.data.success);
+                this.setState({isloggedIn : true});
+                location.replace('/');
 
-        axios.post("/registration", this.state).then(resp => {
-            /*if (resp.data.error) {
-                this.setState({
-                    error: resp.data.error
-                })
-            } else {
-                location.replace('/')
-            }*/
-            console.log(resp.data);
+            }else {
+                this.setState({isloggedIn : false});
+
+            }
         });
+
     }
 
     render() {
-        //const isLoggedIn = this.state.isLoggedIn;
-
-        //if (isLoggedIn) {
-        //return null;
-        //} else {
-        //never forget to return otherwise it will break down!
+        if (this.state.isLoggedIn) {
+            return (
+                <App />
+            );
+        }
         return (
-            <div className="registration">
-                <h1>Register to fight against ignorance!</h1>
-
-                {this.state.error ? <div>ERROR: {this.state.error}</div> : null}
-
+            <div>
                 <form onSubmit={this.handleSubmit}>
-                    <input
-                        onChange={this.handleChange}
-                        name="firstname"
-                        placeholder="first name"
-                        type="text"
-                    />
-                    <input
-                        onChange={this.handleChange}
-                        name="lastname"
-                        placeholder="last name"
-                        type="text"
-                    />
-                    <input
-                        onChange={this.handleChange}
-                        name="email"
-                        placeholder="email"
-                        type="text"
-                    />
-                    <input
-                        onChange={this.handleChange}
-                        name="hashedpassword"
-                        placeholder="password"
-                        type="password"
-                    />
-                    <Link to="/login">Click here to Log in!</Link>
-                    <button type="submit">Submit</button>
+                    <label> First Name:
+                        <input
+                            type="text"
+                            name="firstname"
+                            placeholder="First Name"
+                            onChange={this.handleChange}
+                        />
+                    </label>
+                    <label> Last Name:
+                        <input
+                            type="text"
+                            name="lastname"
+                            placeholder="Last Name"
+                            onChange={this.handleChange}
+                        />
+                    </label>
+                    <label> E-Mail:
+                        <input
+                            type="text"
+                            name="email"
+                            placeholder="E-Mail"
+                            onChange={this.handleChange}
+                        />
+                    </label>
+                    <label> Password:
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            onChange={this.handleChange}
+                        />
+                    </label>
+                    <input type="submit" value="submit" />
                 </form>
+                <Link to="/login">Click here to Log in!</Link>
             </div>
         );
-        //}
     }
+    // }
+
 }
 
-export default Registration; //never use curly brackets when you use export default!
+export default Registration;

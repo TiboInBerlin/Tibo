@@ -1,11 +1,24 @@
-import React from "react";
+import React, {Component} from "react";
 
-function Logo() {
-    return (
-        <div className="mainlogo">
+class Logo extends Component {
+    constructor(props) {
+        super(props);
+
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick(e) {
+        e.preventDefault();
+
+    }
+    render() {
+        return (
+            <div className="mainlogo">
             <img src="./mainlogo.jpg" alt="logo"/>
         </div>
-    );
+        );
+    }
+
 }
 
 export default Logo;

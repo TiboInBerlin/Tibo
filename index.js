@@ -1,16 +1,18 @@
 const express = require("express");
 const app = express();
-const compression = require("compression");
-const bodyParser = require("body-parser");
-const db = require("./db/db.js");
-const bcrypt = require("./db/bcrypt.js");
+const s3 = require("./s3");
+const config = require("./config");
+const multer = require("multer");
+const uidSafe = require("uid-safe");
+const path = require("path");
 const csurf = require("csurf");
+const bcrypt = require("./db/bcrypt");
 const cookieSession = require("cookie-session");
-
+const db = require("./db/db.js");
+const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-
-app.use(express.static("./public"));
+const compression = require("compression");
 
 app.use(compression());
 
@@ -25,9 +27,11 @@ if (process.env.NODE_ENV != "production") {
     app.use("/bundle.js", (req, res) => res.sendFile(`${__dirname}/bundle.js`));
 }
 
+app.use(express.static(__dirname + "/public"));
+
 app.use(
     cookieSession({
-        secret: `I am alway hungry`,
+        secret: `I'm always angry.`,
         maxAge: 1000 * 60 * 60 * 24 * 14
     })
 );
@@ -39,97 +43,169 @@ app.use(function(req, res, next) {
     next();
 });
 
+function checkLogin(req, res, next) {
+    !req.session.isLoggedIn ? res.redirect("/welcome") : next();
+}
+
+const diskStorage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, __dirname + "/uploads");
+    },
+    filename: function(req, file, callback) {
+        uidSafe(24).then(function(uid) {
+            callback(null, uid + path.extname(file.originalname));
+        });
+    }
+});
+
+const uploader = multer({
+    storage: diskStorage,
+    limits: {
+        fileSize: 2097152
+    }
+});
+
+app.post("/upload", uploader.single("file"), s3.upload, function(req, res) {
+    if (req.file) {
+        var imageUrl = config.s3UrlStart + req.file.filename;
+
+        db.updateUserProfilePic(req.session.userId, imageUrl).then(() => {
+            res.json({
+                imageUrl: imageUrl,
+                success: true
+            });
+        });
+    } else {
+        res.json({ success: false });
+    }
+});
+
 app.post("/registration", (req, res) => {
-    //we will use the body parser to get the values of the form of the body
     if (
         req.body.firstname == "" ||
         req.body.lastname == "" ||
         req.body.email == "" ||
-        req.body.hashedpassword == ""
+        req.body.password == ""
     ) {
-        res.json({ success: false }); // if the user has one empty field, we redirect user to register page
+        res.json({
+            success: false,
+            message: "Please Fill in the whole fields"
+        });
     } else {
-        //first we have to do is hashing the password of the user
-        //we access the hashPassword function from bscrypt file and we use .then since the function was promisified in bsrypt.js
-        bcrypt
-            .hashPassword(req.body.hashedpassword)
-            .then(hashedPassword => {
-                // we create here the hashedpassword value in order to receive the returned value of the function hashPassword
-                db
-                    .createUser(
-                        req.body.firstname,
-                        req.body.lastname,
-                        req.body.email,
-                        hashedPassword
-                    )
-                    .then(results => {
-                        //before sending the user to homepage, we want to create a session in order to encrypt the user's data because these data will be available on the client side, which is not safe.
-                        /*req.session.userId = results.id;
-                        req.session.firstname = req.body.firstname;
-                        req.session.lastname = req.body.lastname;
-                        req.session.email = req.body.email;
-                        req.session.hashedPassword = hashedPassword;
-                        req.session.loggedIn = true;*/
-                        res.json({ success: true });
-                        //res.redirect("/");
+        db.checkEmail(req.body.email).then(results => {
+            if (results.length == 0) {
+                bcrypt
+                    .hashPassword(req.body.password)
+                    .then(hashedPassword => {
+                        db
+                            .createUser(
+                                req.body.firstname,
+                                req.body.lastname,
+                                req.body.email,
+                                hashedPassword
+                            )
+                            .then(results => {
+                                req.session.isLoggedIn = true;
+                                console.log(results);
+                                req.session.userId = results.id;
+                                res.json({
+                                    success: true,
+                                    message: "User created successfully"
+                                });
+                            });
+                    })
+                    .catch(err => {
+                        console.log(err);
                     });
-            })
-            .catch(err => {
-                console.log(err);
-            });
+            } else {
+                req.session.loggedIn = false;
+                res.json({
+                    success: false,
+                    message:
+                        "Duplicate Email found, Please use another email address"
+                });
+            }
+        });
     }
 });
 
 app.post("/login", (req, res) => {
-    console.log("loginstart", req.body);
-    //var userInfo; //We create this variable in order to link it with the variable results in our getEmail function.
-    //we will use the body parser to get the values of the form of the body
+    var userInfo;
     if (req.body.email == "" || req.body.password == "") {
-        console.log("allfieldserror");
         res.json({
-            error: true,
-            message: "all fields are required!"
+            success: false,
+            message: "Please Fill in the whole fields"
         });
-        return; // if the user has one empty field, we redirect user to register page
-    }
-
-    db.getEmail(req.body.email).then(results => {
-        //remember: the result is ALWAYS an array!
-        if (results.length == 0) {
-            res.json({
-                error: true,
-                message: "email does not exist"
-            });
-        } else {
-            //userInfo = results[0];
-            //const hashedPwd = userInfo.hashed_password; //result is an array and hashed password is the fifth element of this array
-            bcrypt
-                .checkPassword(req.body.password, results[0].hashed_password)
-                .then(checked => {
-                    if (checked) {
-                        console.log(checked);
-                        /*req.session.userId = userInfo.id;
-                            req.session.firstname = userInfo.first_name;
-                            req.session.lastname = userInfo.last_name;
-                            req.session.email = userInfo.email;
-                            req.session.hashedPassword = hashedPwd;
-                            req.session.loggedIn = true;*/
-                        res.json({ success: true });
-                    } else {
-                        res.json({
-                            error: true,
-                            message: "password does not exist!"
-                        });
-                    }
+    } else {
+        db.checkEmail(req.body.email).then(results => {
+            if (results.length == 0) {
+                res.json({
+                    success: false,
+                    message: "E-Mail does not exist, Please try again"
                 });
-        }
-    });
+            } else {
+                userInfo = results[0];
+                const hashedPwd = userInfo.hashed_password;
+                bcrypt
+                    .checkPassword(req.body.password, hashedPwd)
+                    .then(checked => {
+                        if (checked) {
+                            req.session.isLoggedIn = true;
+                            req.session.userId = userInfo.id;
+                            res.json({
+                                success: true,
+                                message: "User Logged in successfully"
+                            });
+                        } else {
+                            res.json({
+                                success: false,
+                                message:
+                                    "Password does not match, Please try again"
+                            });
+                        }
+                    });
+            }
+        });
+    }
 });
 
-//this shit here should be always last: just do it!
-app.get("*", function(req, res) {
-    res.sendFile(__dirname + "/index.html");
+app.get("/welcome", (req, res) => {
+    req.session.isLoggedIn
+        ? res.redirect("/")
+        : res.sendFile(`${__dirname}/index.html`);
 });
+
+app.get("/user", checkLogin, (req, res) => {
+    db
+        .getUserInfoById(req.session.userId)
+        .then(results => {
+            res.json({
+                ...results
+            });
+        })
+        .catch(() => {
+            res.sendStatus(500);
+        });
+});
+
+app.post("/user-bio", checkLogin, (req, res) => {
+    console.log(req.body.bioText);
+    console.log(req.session.userId);
+    db
+        .updateUserBio(req.session.userId, req.body.bioText)
+        .then(results => {
+            res.json({
+                bioText: results.bio,
+                success: true,
+                message: "User created successfully"
+            });
+        })
+        .catch(err => {
+            console.log(err);
+        });
+});
+
+app.get("*", checkLogin, (req, res) => res.sendFile(`${__dirname}/index.html`));
 
 app.listen(8080, function() {
     console.log("I'm listening.");

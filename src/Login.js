@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 //we do not need to import react dom because qwe did it in sart.js
 import axios from "./axios";
+import App from "./App";
 
 class Login extends Component {
-    constructor() {
-        super();
-
-        this.state = {
-            error: null
-        };
+    constructor(props) {
+        super(props);
+        this.state = { isLoggedIn: null };
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -16,11 +14,11 @@ class Login extends Component {
 
     handleChange(e) {
         //console.log("ho!");
-        //SetState is asynchronous and we can therefore pass it a callback!
+        //setState is asynchronous and we can therefore pass it a callback!
         //Review ES& dynamic properties!!!!!
-        this.setState({
-            //syntax to dynamically set a key:
-            [e.target.name]: e.target.value
+        //hereunder, syntax to dynamically set a key:
+        this.setState({ [e.target.name]: e.target.value }, () => {
+            console.log(this.state);
         });
     }
 
@@ -29,44 +27,48 @@ class Login extends Component {
 
         //console.log("Running handleSubmit", this.state);
 
-        axios.post("/login", this.state).then(resp => {
-            if (resp.data.error) {
-                this.setState({
-                    error: resp.data.message
-                })
+        axios.post("/login", this.state).then(results => {
+            if (results.data.success) {
+                this.setState({ isloggedIn: true });
+                location.replace("/");
             } else {
-                location.replace('/')
+                super.setState({ isloggedIn: false });
+                //console.log(results.data.message);
             }
-            console.log(resp.data);
         });
     }
 
     render() {
-        //never forget to return otherwise it will break down!
-        return (
-            <div className="login">
-                <h1>Login to fight against ignorance!</h1>
+        if (this.state.isLoggedIn) {
+            return <App />;
+        } else {
+            //never forget to return otherwise it will break down!
+            return (
+                <div className="login">
+                    <h1>Login to fight against ignorance!</h1>
 
-                {this.state.error ? <div>ERROR: {this.state.error}</div> : null}
+                    {this.state.error ? (
+                        <div>ERROR: {this.state.error}</div>
+                    ) : null}
 
-                <form onSubmit={this.handleSubmit}>
-
-                    <input
-                        onChange={this.handleChange}
-                        name="email"
-                        placeholder="email"
-                        type="text"
-                    />
-                    <input
-                        onChange={this.handleChange}
-                        name="password"
-                        placeholder="password"
-                        type="password"
-                    />
-                    <button type="submit">Login</button>
-                </form>
-            </div>
-        );
+                    <form onSubmit={this.handleSubmit}>
+                        <input
+                            onChange={this.handleChange}
+                            name="email"
+                            placeholder="email"
+                            type="text"
+                        />
+                        <input
+                            onChange={this.handleChange}
+                            name="password"
+                            placeholder="password"
+                            type="password"
+                        />
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+            );
+        }
     }
 }
 

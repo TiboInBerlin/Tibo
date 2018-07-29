@@ -1,9 +1,9 @@
 const spicedPg = require("spiced-pg");
 let db;
 
-if(process.env.DATABASE_URL){
-    db = spicedPg(process.env.DATABASE_URL)
-}else{
+if (process.env.DATABASE_URL) {
+    db = spicedPg(process.env.DATABASE_URL);
+} else {
     db = spicedPg(
         "postgres:thibautvalarche:postgres@localhost:5432/socialnetwork"
     );
@@ -22,10 +22,38 @@ VALUES($1, $2, $3, $4) RETURNING *
     });
 };
 
-exports.getEmail = function(email) {
-    const q = `SELECT * FROM users WHERE email=$1`;
+exports.getUserInfoById = function(userId) {
+    const q = "SELECT * FROM users WHERE id = $1;"; //$1 prevents against sql injections and refers to the first parameter in the arra params.
+    const params = [userId];
+    return db.query(q, params).then(results => {
+        return results.rows[0];
+    });
+};
+
+exports.checkEmail = function(email) {
+    const q = "SELECT * FROM users WHERE email = $1;";
     const params = [email];
     return db.query(q, params).then(results => {
         return results.rows;
+    });
+};
+
+exports.updateUserProfilePic = function(userId , imageUrl) {
+    const q =
+    "UPDATE users SET image_url = ($2) WHERE id = ($1) RETURNING *;";
+
+    const params = [userId , imageUrl];
+    return db.query(q, params).then(results => {
+        return results.rows[0];
+    });
+};
+
+exports.updateUserBio = function(userId, bio) {
+    const q =
+    "UPDATE users SET bio = ($2) WHERE id = ($1) RETURNING *;";
+
+    const params = [userId , bio];
+    return db.query(q, params).then(results => {
+        return results.rows[0];
     });
 };
