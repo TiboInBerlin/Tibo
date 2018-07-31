@@ -188,6 +188,27 @@ app.get("/user", checkLogin, (req, res) => {
         });
 });
 
+app.get("/user/:id.json", (req, res) => {
+    if (req.session.userId == req.params.id) {
+        console.log("redirecting user");
+        res.json({
+            redirect: "/"
+        });
+    } else {
+        db
+            .getUserInfoById(req.params.id)
+            .then(results => {
+                console.log("getting user info");
+                res.json({
+                    ...results
+                });
+            })
+            .catch(() => {
+                res.sendStatus(500);
+            });
+    }
+});
+
 app.post("/user-bio", checkLogin, (req, res) => {
     console.log(req.body.bioText);
     console.log(req.session.userId);
@@ -203,6 +224,36 @@ app.post("/user-bio", checkLogin, (req, res) => {
         .catch(err => {
             console.log(err);
         });
+});
+
+app.get("/user-friendship", (req, res) => {
+    db.getFriendshipStatusById(req.session.userId).then(results => {
+        console.log(results);
+        if (results.length == 0) {
+            res.json({
+                results: 0
+            });
+        } else {
+            var data = results[0];
+            console.log(data);
+            res.json({
+                ...data
+            });
+        }
+    });
+    //.catch(()=>{
+    //     res.sendStatus(500);
+    // });
+});
+
+app.post("/accept-request", (req, res) => {
+    console.log(req.body.senderId + " " + req.body.status);
+});
+
+app.get("/logout", checkLogin, (req, res) => {
+    req.session.isLoggedIn = false;
+    req.session.userId = null;
+    res.sendFile(`${__dirname}/index.html`);
 });
 
 app.get("*", checkLogin, (req, res) => res.sendFile(`${__dirname}/index.html`));
