@@ -218,7 +218,7 @@ app.post("/user-bio", checkLogin, (req, res) => {
             res.json({
                 bioText: results.bio,
                 success: true,
-                message: "User created successfully"
+                message: "Bio created successfully"
             });
         })
         .catch(err => {

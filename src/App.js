@@ -55,7 +55,7 @@ class App extends React.Component {
                 userId: results.data.id,
                 firstName: results.data.first_name,
                 lastName: results.data.last_name,
-                profilePic: results.data.image_url || "./images/default.jpg",
+                profilePic: results.data.image_url || "./public/default.jpg",
                 bio: results.data.bio
             });
         });
@@ -63,31 +63,35 @@ class App extends React.Component {
 
     render() {
         if (!this.state.userId) {
-            return <img src="./images/progressbar.gif" />;
+            return <img src="./public/default.jpg" />;
         }
         return (
             <div id="app">
                 <Logo first={this.state.firstName} last={this.state.lastName} />
-        
                 {this.state.uploaderIsVisible && (
                     <Uploader setImage={this.setImage} />
                 )}
                 <BrowserRouter>
                     <div>
-                         <Route path="/profile" render={() => (
-                        <Profile
-                            firstName={this.state.firstName}
-                            lastName={this.state.lastName}
-                            userId={this.state.userId}
-                            profilePic={this.state.profilePic}
-                            showBio={this.state.showBio}
-                            uploaderIsVisible={this.state.uploaderIsVisible}
-                            toggleShowBio={this.toggleShowBio}
-                            showUploader={this.showUploader}
-                            setImage={this.setImage}
-                            setBio={this.setBio}
+                        <Route
+                            path="/profile"
+                            render={() => (
+                                <Profile
+                                    firstName={this.state.firstName}
+                                    lastName={this.state.lastName}
+                                    userId={this.state.userId}
+                                    profilePic={this.state.profilePic}
+                                    showBio={this.state.showBio}
+                                    uploaderIsVisible={
+                                        this.state.uploaderIsVisible
+                                    }
+                                    toggleShowBio={this.toggleShowBio}
+                                    showUploader={this.showUploader}
+                                    setImage={this.setImage}
+                                    setBio={this.setBio}
+                                />
+                            )}
                         />
-                        )} />
                         <Route path="/user/:id" component={OtherUserProfile} />
                     </div>
                 </BrowserRouter>

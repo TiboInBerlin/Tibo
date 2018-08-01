@@ -30,7 +30,7 @@ class Login extends Component {
         axios.post("/login", this.state).then(results => {
             if (results.data.success) {
                 this.setState({ isloggedIn: true });
-                location.replace("/");
+                location.replace("/profile");
             } else {
                 super.setState({ isloggedIn: false });
                 //console.log(results.data.message);

@@ -70,7 +70,7 @@ class Profile extends Component {
                 </p>
                 {showBio ? (
                     <form onSubmit={() => setBio(this.state.bioText)}>
-                        <textarea name="bioText" onChange={this.handleChange} />{" "}
+                        <textarea name="bioText" onChange={this.handleChange} />{""}
                         <input type="submit" value="submit" />
                     </form>
                 ) : (
