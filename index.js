@@ -210,8 +210,8 @@ app.get("/user/:id.json", (req, res) => {
 });
 
 app.post("/user-bio", checkLogin, (req, res) => {
-    console.log(req.body.bioText);
-    console.log(req.session.userId);
+    //console.log(req.body.bioText);
+    //console.log(req.session.userId);
     db
         .updateUserBio(req.session.userId, req.body.bioText)
         .then(results => {
@@ -228,7 +228,7 @@ app.post("/user-bio", checkLogin, (req, res) => {
 
 app.get("/user-friendship", (req, res) => {
     db.getFriendshipStatusById(req.session.userId).then(results => {
-        console.log(results);
+        //console.log(results);
         if (results.length == 0) {
             res.json({
                 results: 0
@@ -246,8 +246,74 @@ app.get("/user-friendship", (req, res) => {
     // });
 });
 
+app.get("/user-friendship/:id.json", (req, res) => {
+    console.log(req.params.id);
+    db
+        .getFriendshipStatus(req.params.id, req.session.userId)
+        .then(results => {
+            if (results.length == 0) {
+                res.json({
+                    success: false, //no results
+                    loggedInUser: req.session.userId
+                });
+            } else {
+                res.json({
+                    success: true,
+                    loggedInUser: req.session.userId,
+                    results: results
+                });
+            }
+        })
+        .catch(() => {
+            res.sendStatus(500);
+        });
+});
+
 app.post("/accept-request", (req, res) => {
-    console.log(req.body.senderId + " " + req.body.status);
+    db
+        .setFriendshipStatus(
+            req.body.senderId,
+            req.body.receiverId,
+            req.body.status
+        )
+        .then(results => {
+            res.json({
+                ...results[0],
+                success: true
+            });
+        })
+        .catch(() => {
+            res.sendStatus(500);
+        });
+});
+
+app.post("/add-friend", (req, res) => {
+    db
+        .addFriend(req.body.senderId, req.body.receiverId, req.body.status)
+        .then(results => {
+            res.json({
+                ...results,
+                success: true
+            });
+        })
+        .catch(() => {
+            res.sendStatus(500);
+        });
+});
+
+app.post("/delete-friendship", (req, res) => {
+    console.log(req.body.senderId);
+    db
+        .deleteFriendship(req.body.senderId, req.body.receiverId)
+        .then(results => {
+            res.json({
+                ...results,
+                success: true
+            });
+        })
+        .catch(() => {
+            res.sendStatus(500);
+        });
 });
 
 app.get("/logout", checkLogin, (req, res) => {

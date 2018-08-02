@@ -6,6 +6,13 @@ class OtherUserProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {};
+        this.setFriendshipStatus = this.setFriendshipStatus.bind(this);
+    }
+
+    setFriendshipStatus(status) {
+        this.setState({
+            friendshipStatus: status
+        });
     }
 
     componentDidMount() {
@@ -16,12 +23,13 @@ class OtherUserProfile extends Component {
                     this.props.history.push("/");
                 } else {
                     this.setState({
-                        userId: results.data.id,
-                        firstName: results.data.first_name,
-                        lastName: results.data.last_name,
-                        bio: results.data.bio,
-                        profilePic: results.data.image_url || "default.jpg",
-                        createdAt: results.data.created_at
+                        otherUserId: results.data.id,
+                        otherUserFirstName: results.data.first_name,
+                        otherUserLastName: results.data.last_name,
+                        otherUserbio: results.data.bio,
+                        otherUserProfilePic:
+                            results.data.image_url || "default.jpg",
+                        otherUserCreatedAt: results.data.created_at
                     });
                 }
             })
@@ -29,15 +37,18 @@ class OtherUserProfile extends Component {
                 axios
                     .get("/user-friendship/:" + this.state.userId + ".json")
                     .then(resp => {
-                        if (resp.data.results == 0) {
+                        if (!resp.data.success) {
                             this.setState({
-                                friendshipStatus: 0
+                                friendshipStatus: 3,
+                                loggedInUserId: resp.data.loggedInUser
                             });
                         } else {
-                            console.log(resp.data);
+                            console.log(resp.data.results[0].status);
                             this.setState({
-                                friendshipStatus: resp.data.status,
-                                senderId: resp.data.sender_id
+                                friendshipStatus: resp.data.results[0].status,
+                                loggedInUserId: resp.data.loggedInUser,
+                                senderId: resp.data.results[0].sender_id,
+                                receiverId: resp.data.results[0].receiver_id
                             });
                         }
                     });
@@ -48,10 +59,11 @@ class OtherUserProfile extends Component {
         return (
             <div id="other-user-profile">
                 <h1>
-                    Profile of {this.state.firstName}, {this.state.lastName}
+                    Profile of {this.state.otherUserFirstName}, {this.state.otherUserLastName}
                 </h1>
-                <img src={this.state.profilePic} alt=" Profile Pic" />
-                <p>{this.state.bio}</p>
+                <img src={this.state.otherUserProfilePic} alt=" Profile Pic" width="300" height ="300" />
+                <p>{this.state.otherUserBio}</p>
+                {this.state.friendshipStatus && <FriendshipButton status={this.state.friendshipStatus} senderId={this.state.senderId} receiverId={this.state.receiverId} otherUserId={this.state.otherUserId} loggedInUserId={this.state.loggedInUserId} setFriendshipStatus={this.state.setFriendshipStatus} />}
             </div>
         );
     }
