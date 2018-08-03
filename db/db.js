@@ -69,7 +69,7 @@ exports.getFriendshipStatus = function(senderId, receiverId) {
         "SELECT * FROM friendships WHERE ((sender_id = $1 AND receiver_id = $2) OR (sender_id = $2 AND receiver_id = $1)) RETURNING *;";
     const params = [senderId, receiverId];
     return db.query(q, params).then(results => {
-        return results.rows[0];
+        return results.rows;
     });
 };
 

@@ -10,16 +10,15 @@ class Profile extends Component {
         var textArea = "";
         this.state = {};
         this.handleChange = this.handleChange.bind(this);
-        this.setFriendshipStatus = this.setFriendshipStatus.bind(this);
     }
 
-    setFriendshipStatus(status) {
+    /*setFriendshipStatus(status) {
         this.setState({
             friendshipStatus: status
         });
-    }
+    }*/
 
-    componentDidMount() {
+    /*componentDidMount() {
         axios.get("/user-friendship").then(resp => {
             console.log("resp");
             if (resp.data.results == 0) {
@@ -34,7 +33,7 @@ class Profile extends Component {
                 });
             }
         });
-    }
+    }*/
 
     handleChange(e) {
         this.setState({ [e.target.name]: e.target.value }, () => {
@@ -70,18 +69,12 @@ class Profile extends Component {
                 </p>
                 {showBio ? (
                     <form onSubmit={() => setBio(this.state.bioText)}>
-                        <textarea name="bioText" onChange={this.handleChange} />{""}
+                        <textarea name="bioText" onChange={this.handleChange} />
+                        {""}
                         <input type="submit" value="submit" />
                     </form>
                 ) : (
                     <p onClick={toggleShowBio}>Click to add a bio</p>
-                )}
-                {this.state.friendshipStatus && (
-                    <FriendshipButton
-                        status={this.state.friendshipStatus}
-                        senderId={this.state.senderId}
-                        setFriendshipStatus={this.setFriendshipStatus}
-                    />
                 )}
             </div>
         );

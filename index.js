@@ -89,7 +89,7 @@ app.post("/registration", (req, res) => {
     ) {
         res.json({
             success: false,
-            message: "Please Fill in the whole fields"
+            message: "Please fill in all fields"
         });
     } else {
         db.checkEmail(req.body.email).then(results => {
@@ -160,7 +160,7 @@ app.post("/login", (req, res) => {
                             res.json({
                                 success: false,
                                 message:
-                                    "Password does not match, Please try again"
+                                    "Password invalid, Please try again"
                             });
                         }
                     });
@@ -271,15 +271,14 @@ app.get("/user-friendship/:id.json", (req, res) => {
 
 app.post("/accept-request", (req, res) => {
     db
-        .setFriendshipStatus(
+        .addFriend(
             req.body.senderId,
             req.body.receiverId,
             req.body.status
         )
         .then(results => {
             res.json({
-                ...results[0],
-                success: true
+                ...results
             });
         })
         .catch(() => {
@@ -292,8 +291,7 @@ app.post("/add-friend", (req, res) => {
         .addFriend(req.body.senderId, req.body.receiverId, req.body.status)
         .then(results => {
             res.json({
-                ...results,
-                success: true
+                ...results
             });
         })
         .catch(() => {

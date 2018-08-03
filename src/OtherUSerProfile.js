@@ -32,38 +32,23 @@ class OtherUserProfile extends Component {
                         otherUserCreatedAt: results.data.created_at
                     });
                 }
-            })
-            .then(() => {
-                axios
-                    .get("/user-friendship/:" + this.state.userId + ".json")
-                    .then(resp => {
-                        if (!resp.data.success) {
-                            this.setState({
-                                friendshipStatus: 3,
-                                loggedInUserId: resp.data.loggedInUser
-                            });
-                        } else {
-                            console.log(resp.data.results[0].status);
-                            this.setState({
-                                friendshipStatus: resp.data.results[0].status,
-                                loggedInUserId: resp.data.loggedInUser,
-                                senderId: resp.data.results[0].sender_id,
-                                receiverId: resp.data.results[0].receiver_id
-                            });
-                        }
-                    });
             });
     }
-
     render() {
         return (
             <div id="other-user-profile">
                 <h1>
-                    Profile of {this.state.otherUserFirstName}, {this.state.otherUserLastName}
+                    Profile of {this.state.otherUserFirstName},{" "}
+                    {this.state.otherUserLastName}
                 </h1>
-                <img src={this.state.otherUserProfilePic} alt=" Profile Pic" width="300" height ="300" />
+                <img
+                    src={this.state.otherUserProfilePic}
+                    alt=" Profile Pic"
+                    width="300"
+                    height="300"
+                />
                 <p>{this.state.otherUserBio}</p>
-                {this.state.friendshipStatus && <FriendshipButton status={this.state.friendshipStatus} senderId={this.state.senderId} receiverId={this.state.receiverId} otherUserId={this.state.otherUserId} loggedInUserId={this.state.loggedInUserId} setFriendshipStatus={this.state.setFriendshipStatus} />}
+                <FriendshipButton otherUserId={this.props.match.params.id} />
             </div>
         );
     }
