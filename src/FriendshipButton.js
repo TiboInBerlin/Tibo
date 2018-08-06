@@ -73,7 +73,7 @@ class FriendshipButton extends React.Component {
                         friendshipStatus: results.data.status,
                         senderId: results.data.sender_id,
                         receiver_id: results.data.receiver_id,
-                        buttonText: "Cancle Friend Request"
+                        buttonText: "Cancel Friend Request"
                     });
                 });
         } else if (

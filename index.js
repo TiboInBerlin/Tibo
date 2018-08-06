@@ -89,7 +89,7 @@ app.post("/registration", (req, res) => {
     ) {
         res.json({
             success: false,
-            message: "Please fill in all fields"
+            message: "Please Fill in the whole fields"
         });
     } else {
         db.checkEmail(req.body.email).then(results => {
@@ -160,7 +160,7 @@ app.post("/login", (req, res) => {
                             res.json({
                                 success: false,
                                 message:
-                                    "Password invalid, Please try again"
+                                    "Password does not match, Please try again"
                             });
                         }
                     });
@@ -210,15 +210,15 @@ app.get("/user/:id.json", (req, res) => {
 });
 
 app.post("/user-bio", checkLogin, (req, res) => {
-    //console.log(req.body.bioText);
-    //console.log(req.session.userId);
+    console.log(req.body.bioText);
+    console.log(req.session.userId);
     db
         .updateUserBio(req.session.userId, req.body.bioText)
         .then(results => {
             res.json({
                 bioText: results.bio,
                 success: true,
-                message: "Bio created successfully"
+                message: "User created successfully"
             });
         })
         .catch(err => {
@@ -228,7 +228,7 @@ app.post("/user-bio", checkLogin, (req, res) => {
 
 app.get("/user-friendship", (req, res) => {
     db.getFriendshipStatusById(req.session.userId).then(results => {
-        //console.log(results);
+        console.log(results);
         if (results.length == 0) {
             res.json({
                 results: 0
@@ -241,26 +241,27 @@ app.get("/user-friendship", (req, res) => {
             });
         }
     });
-    //.catch(()=>{
-    //     res.sendStatus(500);
-    // });
+
 });
 
 app.get("/user-friendship/:id.json", (req, res) => {
-    console.log(req.params.id);
+    console.log(req.params.id, req.session.userId);
     db
         .getFriendshipStatus(req.params.id, req.session.userId)
         .then(results => {
             if (results.length == 0) {
+                results = {
+                    id: null,
+                    loggedInUserId: req.session.userId
+                };
                 res.json({
-                    success: false, //no results
-                    loggedInUser: req.session.userId
+                    ...results
                 });
             } else {
+                results = results[0];
+                results.loggedInUserId = req.session.userId;
                 res.json({
-                    success: true,
-                    loggedInUser: req.session.userId,
-                    results: results
+                    ...results
                 });
             }
         })
@@ -271,7 +272,35 @@ app.get("/user-friendship/:id.json", (req, res) => {
 
 app.post("/accept-request", (req, res) => {
     db
-        .addFriend(
+        .addFriend(req.body.senderId, req.body.receiverId, req.body.status)
+        .then(results => {
+            console.log(results);
+            res.json({
+                ...results
+            });
+        })
+        .catch(() => {
+            res.sendStatus(500);
+        });
+});
+
+app.post("/add-friend", (req, res) => {
+    db
+        .addFriend(req.body.senderId, req.body.receiverId, req.body.status)
+        .then(results => {
+            console.log(results);
+            res.json({
+                ...results
+            });
+        })
+        .catch(() => {
+            res.sendStatus(500);
+        });
+});
+
+app.post("/update-friend", (req, res) => {
+    db
+        .setFriendshipStatus(
             req.body.senderId,
             req.body.receiverId,
             req.body.status
@@ -286,9 +315,9 @@ app.post("/accept-request", (req, res) => {
         });
 });
 
-app.post("/add-friend", (req, res) => {
+app.post("/delete-friendship", (req, res) => {
     db
-        .addFriend(req.body.senderId, req.body.receiverId, req.body.status)
+        .deleteFriendship(req.body.senderId, req.body.receiverId)
         .then(results => {
             res.json({
                 ...results
@@ -299,20 +328,6 @@ app.post("/add-friend", (req, res) => {
         });
 });
 
-app.post("/delete-friendship", (req, res) => {
-    console.log(req.body.senderId);
-    db
-        .deleteFriendship(req.body.senderId, req.body.receiverId)
-        .then(results => {
-            res.json({
-                ...results,
-                success: true
-            });
-        })
-        .catch(() => {
-            res.sendStatus(500);
-        });
-});
 
 app.get("/logout", checkLogin, (req, res) => {
     req.session.isLoggedIn = false;

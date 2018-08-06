@@ -12,28 +12,6 @@ class Profile extends Component {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    /*setFriendshipStatus(status) {
-        this.setState({
-            friendshipStatus: status
-        });
-    }*/
-
-    /*componentDidMount() {
-        axios.get("/user-friendship").then(resp => {
-            console.log("resp");
-            if (resp.data.results == 0) {
-                this.setState({
-                    friendshipStatus: 0
-                });
-            } else {
-                console.log(resp.data);
-                this.setState({
-                    friendshipStatus: resp.data.status,
-                    senderId: resp.data.sender_id
-                });
-            }
-        });
-    }*/
 
     handleChange(e) {
         this.setState({ [e.target.name]: e.target.value }, () => {

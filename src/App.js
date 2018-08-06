@@ -50,7 +50,6 @@ class App extends React.Component {
 
     componentDidMount() {
         axios.get("/user").then(results => {
-            console.log(results);
             this.setState({
                 userId: results.data.id,
                 firstName: results.data.first_name,
@@ -63,7 +62,7 @@ class App extends React.Component {
 
     render() {
         if (!this.state.userId) {
-            return (<div>Loading...</div>);
+            return <div>Loading...</div>;
         }
         return (
             <div id="app">
