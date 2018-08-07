@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import ProfilePic from "./ProfilePic";
 import Uploader from "./Uploader";
-import axios from "./axios";
-import FriendshipButton from "./FriendshipButton";
+//import axios from "./axios";
+//import FriendshipButton from "./FriendshipButton";
 
 class Profile extends Component {
     constructor(props) {
@@ -15,7 +15,6 @@ class Profile extends Component {
 
     handleChange(e) {
         this.setState({ [e.target.name]: e.target.value }, () => {
-            //console.log(this.state);
         });
     }
 
@@ -26,6 +25,7 @@ class Profile extends Component {
             userId,
             profilePic,
             uploaderIsVisible,
+            userBio,
             showBio,
             toggleShowBio,
             showUploader,
@@ -45,6 +45,7 @@ class Profile extends Component {
                 <p>
                     {firstName} {lastName}
                 </p>
+                {userBio && <p>{userBio}</p>}
                 {showBio ? (
                     <form onSubmit={() => setBio(this.state.bioText)}>
                         <textarea name="bioText" onChange={this.handleChange} />
