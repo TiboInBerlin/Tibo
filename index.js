@@ -366,6 +366,27 @@ app.get("*", checkLogin, (req, res) => res.sendFile(`${__dirname}/index.html`));
 
 server.listen(8080); // it's server, not app, that does the listening
 
+io.on('connection', function(socket) {
+
+    if (!socket.request.session || !socket.request.session.user) {
+            return socket.disconnect(true);
+        }
+
+    console.log(`socket with the id ${socket.id} is now connected`);
+
+    socket.on('disconnect', function() {
+        console.log(`socket with the id ${socket.id} is now disconnected`);
+    });
+
+    socket.on('thanks', function(data) {
+        console.log(data);
+    });
+
+    socket.emit('welcome', {
+        message: 'Welome. It is nice to see you'
+    });
+});
+
 /*app.listen(8080, function() {
     console.log("I'm listening.");
 });*/
