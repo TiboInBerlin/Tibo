@@ -8,6 +8,8 @@ import ProfilePic from "./ProfilePic";
 import OtherUserProfile from "./OtherUserProfile";
 import Friends from "./Friends";
 
+
+
 class App extends React.Component {
     constructor(props) {
         super(props);
