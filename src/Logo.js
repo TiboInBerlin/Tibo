@@ -21,7 +21,7 @@ class Logo extends Component {
             <div id="logo-component">
                 <img src="./mainlogo.jpg" alt="logo" />
 
-                <button type="button" onClick={this.handleClick}>Log out</button>
+                
             </div>
         );
     }

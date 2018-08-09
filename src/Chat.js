@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { newMessageSocket } from'./socket';
+import { Link } from 'react-router-dom';
 
 class Chat extends React.Component {
     constructor() {
@@ -28,7 +29,7 @@ class Chat extends React.Component {
         }
         let chatMsgs = chatMessages.slice(-10,);
         const chatDiv = (
-            <div>
+            <div className="chatWindow">
                 <h1>Chat</h1>
                 <div className="chatMessages">
                     {chatMsgs.map(message => (
@@ -40,6 +41,7 @@ class Chat extends React.Component {
                     ))}
 
                 </div>
+
             </div>
         );
 
@@ -51,7 +53,11 @@ class Chat extends React.Component {
                 <form onSubmit={ this.handleSubmitTextarea } >
                     <textarea id="chatTextArea" name="chatMessage" onChange={ this.handleChangeTextarea }></textarea>
                     <button type="submit">Send Message</button>
+
                 </form>
+                <Link to="/profile" className="profilelink">Go back to your profile</Link>
+                <br></br>
+                <a href="/logout">Logout</a>
             </div>
         );
     }

@@ -7,9 +7,19 @@ body {
     padding: 15px;
 }
 
-.registration {
-    background-color: yellow;
+#registration {
+    display:grid;
     padding: 15px;
+}
+
+#login{
+    margin-top: 10vh;
+
+}
+
+.chatMessages{
+    width: 10px;
+    height: 10px;
 }
 
 

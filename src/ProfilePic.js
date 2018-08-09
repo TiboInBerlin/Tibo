@@ -5,11 +5,7 @@ function ProfilePic({ image, first, last, clickHandler }) {
         <div className="profilepic-container">
             <div>
                 {" "}
-                <img
-                    className="profilepic"
-                    src={image}
-
-                />
+                <img className="profilepic" src={image} />
                 <button onClick={clickHandler}>Upload new image</button>
             </div>
         </div>

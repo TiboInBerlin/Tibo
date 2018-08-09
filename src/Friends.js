@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 //import { Link } from 'react-router-dom';
 import { receiveFriendsWannabes , acceptFriendRequest , endFriendship} from './actions';
 //import FriendshipButton from './FriendshipButton';
+import { Link } from 'react-router-dom';
 
 class Friends extends React.Component {
     componentDidMount() {
@@ -68,6 +69,12 @@ class Friends extends React.Component {
                     {userFriends.length && <h3>Those people are your friends</h3>}
                     {!!userFriends.length && friends}
                 </div>
+                <br></br>
+                <Link to="/chat" className="chatlink">Start chat with all users online!</Link>
+                <br></br>
+                <Link to="/profile" className="profilelink">Go back to your profile</Link>
+                <br></br>
+                <a href="/logout">Logout</a>
             </div>
         );
 

@@ -25,7 +25,7 @@ class Registration extends Component { //inherits properties of Component
             if (results.data.success) {
                 console.log(results.data.success);
                 this.setState({isloggedIn : true});
-                location.replace('/');
+                location.replace('/profile');
 
             }else {
                 this.setState({isloggedIn : false});
@@ -42,7 +42,7 @@ class Registration extends Component { //inherits properties of Component
             );
         }
         return (
-            <div>
+            <div id="registration">
                 <form onSubmit={this.handleSubmit}>
                     <label> First Name:
                         <input
@@ -62,7 +62,7 @@ class Registration extends Component { //inherits properties of Component
                     </label>
                     <label> E-Mail:
                         <input
-                            type="text"
+                            type="email"
                             name="email"
                             placeholder="E-Mail"
                             onChange={this.handleChange}
@@ -78,7 +78,7 @@ class Registration extends Component { //inherits properties of Component
                     </label>
                     <input type="submit" value="submit" />
                 </form>
-                <Link to="/login">Click here to Log in!</Link>
+                <Link to="/login" className="linklogin">Click here to Log in!</Link>
             </div>
         );
     }

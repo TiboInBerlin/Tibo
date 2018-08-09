@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 function Welcome() {
     return (
         <div className="big-momma-component">
-            <h1> Welcome </h1>
+            <h1> Let's fight ignorance all together!</h1>
             <Logo />
             <HashRouter>
                 <div>
