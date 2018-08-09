@@ -1,5 +1,6 @@
-import React, { Component } from "react";
-import axios from "./axios";
+import React, {Component} from "react";
+import axios from './axios';
+
 
 class Logo extends Component {
     constructor(props) {
@@ -10,21 +11,21 @@ class Logo extends Component {
 
     handleClick(e) {
         e.preventDefault();
-        axios.get("/logout").then(() => {
-            super.setState({ isLoggedIn: false });
-            location.replace("/welcome");
+        axios.get('/logout').then(()=>{
+            super.setState({isLoggedIn : false});
+            location.replace('/welcome');
         });
     }
     render() {
         return (
-            <div className="mainlogo">
+            <div id="logo-component">
                 <img src="./mainlogo.jpg" alt="logo" />
-                <button type="button" onClick={this.handleClick}>
-                    Log out
-                </button>
+
+                <button type="button" onClick={this.handleClick}>Log out</button>
             </div>
         );
     }
+
 }
 
 export default Logo;
