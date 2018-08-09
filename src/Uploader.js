@@ -20,7 +20,7 @@ function Uploader({ setImage }) {
 
     return (
         <div>
-            <br></br>
+            <br></br><br></br>
             <label id="file-label" htmlFor="file-field">
                         Select your image:
                     </label>

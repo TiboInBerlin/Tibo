@@ -1,52 +1,121 @@
 body {
-    background-color: #c0392b;
+    background-image: url("revolution.jpg");
+    color: white;
+}
+
+button {
+	-moz-box-shadow:inset 0px 1px 0px 0px #f29c93;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #f29c93;
+	box-shadow:inset 0px 1px 0px 0px #f29c93;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #fe1a00), color-stop(1, #ce0100));
+	background:-moz-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+	background:-webkit-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+	background:-o-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+	background:-ms-linear-gradient(top, #fe1a00 5%, #ce0100 100%);
+	background:linear-gradient(to bottom, #fe1a00 5%, #ce0100 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#fe1a00', endColorstr='#ce0100',GradientType=0);
+	background-color:#fe1a00;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #d83526;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #b23e35;
+}
+button:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ce0100), color-stop(1, #fe1a00));
+	background:-moz-linear-gradient(top, #ce0100 5%, #fe1a00 100%);
+	background:-webkit-linear-gradient(top, #ce0100 5%, #fe1a00 100%);
+	background:-o-linear-gradient(top, #ce0100 5%, #fe1a00 100%);
+	background:-ms-linear-gradient(top, #ce0100 5%, #fe1a00 100%);
+	background:linear-gradient(to bottom, #ce0100 5%, #fe1a00 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ce0100', endColorstr='#fe1a00',GradientType=0);
+	background-color:#ce0100;
+}
+button:active {
+	position:relative;
+	top:1px;
+}
+
+#bio{
+    margin-top: 10vh;
+    border: solid red 0.5vh;
+    position: relative;
+    width: 40vh;
+    text-align: center;
 }
 
 .big-momma-component {
-    background-color: green;
-    padding: 15px;
+}
+
+a {
+    color: beige;
 }
 
 #registration {
-    display:grid;
+    display: grid;
     padding: 15px;
 }
 
-#login{
+#login {
     margin-top: 10vh;
-
 }
 
-.chatMessages{
-    width: 10px;
-    height: 10px;
-}
 
 
 .profilepic-container {
-  width: 100px;
-  height: 100px;
+    width: 100px;
+    height: 100px;
 }
 
 .profilepic {
-  margin-left: 10px;
-  height: 90px;
-  width: 90px;
+    margin-left: 10px;
+    height: 90px;
+    width: 90px;
 }
 
 .profile-pic-chat {
-  height: 60px;
-  width: 60px;
-}
- .online-user-pic {
-  height: 60px;
-  width: 60px;
+    height: 60px;
+    width: 60px;
 }
 
- #chat {
-  height : 800px;
-  width : 800px;
-  border: 2px solid black;
-  border-radius: 20px;
-  overflow-y: scroll;
+.link {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    margin-top: 10vh;
+}
+
+
+.online-user-pic {
+    height: 60px;
+    width: 60px;
+}
+
+#registration{
+    display: grid;
+
+}
+
+#chat {
+    height: 500px;
+    width: 500px;
+    border: 2px solid black;
+    border-radius: 20px;
+    overflow-y: scroll;
+}
+
+
+#chatTextArea{
+    position: relative;
+    margin-top: 5vh;
+    margin-right: 2vh;
+    height: 5vh;
+    width: 50vh;
 }

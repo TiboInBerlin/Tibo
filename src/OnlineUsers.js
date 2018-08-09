@@ -22,14 +22,16 @@ class OnlineUsers extends React.Component {
                         </div>
                     ))}
                 </div>
-                <br></br>
+                <div className="link">
+
                 <Link to="/friends" className="friendslink">Friends and friends requests</Link>
-                <br></br>
+
                 <Link to="/chat" className="chatlink">Start chat with all users online!</Link>
-                <br></br>
+
                 <Link to="/profile" className="profilelink">Go back to your profile</Link>
-                <br></br>
+
                 <a href="/logout">Logout</a>
+            </div>
             </div>
         );
 

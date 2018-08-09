@@ -34,8 +34,8 @@ class Chat extends React.Component {
                 <div className="chatMessages">
                     {chatMsgs.map(message => (
                         <div key={message.date} className="message">
-                            <img className="profile-pic-chat" src={message.profilePic || '/images/default.png'}/> {message.date}
-                            <div className='userName'>{message.firstName} {message.lastName}</div>
+                            <img className="profile-pic-chat" src={message.profilePic || '/default.jpg'}/> {message.date}
+                            <div className='userName'>{message.lastName}</div>
                             <div className='message-content'>{message.content}</div>
                         </div>
                     ))}
@@ -49,15 +49,17 @@ class Chat extends React.Component {
             <div>
                 <div id="chat">
                     {chatDiv}
-                </div><br></br>
+                </div>
                 <form onSubmit={ this.handleSubmitTextarea } >
                     <textarea id="chatTextArea" name="chatMessage" onChange={ this.handleChangeTextarea }></textarea>
                     <button type="submit">Send Message</button>
 
                 </form>
+                <div className="link">
                 <Link to="/profile" className="profilelink">Go back to your profile</Link>
                 <br></br>
                 <a href="/logout">Logout</a>
+            </div>
             </div>
         );
     }

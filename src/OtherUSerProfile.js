@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import axios from "./axios";
 import FriendshipButton from "./FriendshipButton";
 
+
 class OtherUserProfile extends Component {
     constructor(props) {
         super(props);
@@ -49,7 +50,9 @@ class OtherUserProfile extends Component {
                 />
                 <p>{this.state.otherUserBio}</p>
                 <FriendshipButton otherUserId={this.props.match.params.id} />
+<a href="/logout">Logout</a>
             </div>
+
         );
     }
 }

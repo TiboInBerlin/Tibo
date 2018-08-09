@@ -51,7 +51,7 @@ class Registration extends Component { //inherits properties of Component
                             placeholder="First Name"
                             onChange={this.handleChange}
                         />
-                    </label>
+                    </label> <br></br> <br></br>
                     <label> Last Name:
                         <input
                             type="text"
@@ -59,7 +59,7 @@ class Registration extends Component { //inherits properties of Component
                             placeholder="Last Name"
                             onChange={this.handleChange}
                         />
-                    </label>
+                    </label> <br></br> <br></br>
                     <label> E-Mail:
                         <input
                             type="email"
@@ -67,7 +67,7 @@ class Registration extends Component { //inherits properties of Component
                             placeholder="E-Mail"
                             onChange={this.handleChange}
                         />
-                    </label>
+                    </label> <br></br> <br></br>
                     <label> Password:
                         <input
                             type="password"
@@ -76,9 +76,11 @@ class Registration extends Component { //inherits properties of Component
                             onChange={this.handleChange}
                         />
                     </label>
-                    <input type="submit" value="submit" />
+                    <input type="submit" value="submit"/>
                 </form>
+                <div className="link">
                 <Link to="/login" className="linklogin">Click here to Log in!</Link>
+            </div>
             </div>
         );
     }

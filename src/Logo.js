@@ -19,9 +19,9 @@ class Logo extends Component {
     render() {
         return (
             <div id="logo-component">
-                <img src="./mainlogo.jpg" alt="logo" />
+                <img src="./mainlogo.jpg" alt="logo" align="right"/>
 
-                
+
             </div>
         );
     }
